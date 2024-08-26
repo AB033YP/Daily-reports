@@ -1,0 +1,29 @@
+import pandas as pd
+from tabulate import tabulate
+import matplotlib.pyplot as plt
+file_path = 'C:\\Users\\ab033yp\\Desktop\\sc_req_item.xlsx' #this code is readin into the file path
+try: #this part of the code is reading inside the actual file. And it will excute "File not found.Pleae check file path if there path isn't producing a file"
+    df = pd.read_excel(file_path)
+except FileNotFoundError:
+    print(f"File '{file_path}' not found. Please check the file path.")
+df = df[df['Assignment group'].isin(['FinControl Compass User Support', 'FinTech Compass Data'])]
+if 'State' in df.columns:
+    df = df[df['State'].str.lower() == 'open']
+else:
+    print("The 'State' column was not found. Please check the column name in your Excel file.")
+df = df[['Number', 'Opened by', 'State', 'Assigned to', 'Application', 'Description']]
+
+# Create a table
+table = tabulate(df, headers='keys', tablefmt='grid')
+print(table)
+name_counts = df['Assigned to'].value_counts()
+plt.figure(figsize=(10, 6))
+plt.bar(name_counts.index, name_counts.values)
+plt.xlabel('Assigned to')
+plt.ylabel('Count')
+plt.title('Count of Assignments by User')
+plt.xticks(rotation=45)
+plt.show()
+print("\nCount of Assignments by User:")
+print(name_counts)
+
